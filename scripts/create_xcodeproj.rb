@@ -26,7 +26,7 @@ app_target.build_configurations.each do |config|
   config.build_settings['INFOPLIST_FILE'] = 'src/Config/MarkdownPreviewApp-Info.plist'
   config.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'src/Config/MarkdownPreviewApp.entitlements'
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.local.MarkdownPreviewApp'
-  config.build_settings['DEVELOPMENT_TEAM'] = 'Q53266ZR2B'
+  config.build_settings['DEVELOPMENT_TEAM'] = 'ZVKZS6XN7Q'
   config.build_settings['CODE_SIGN_STYLE'] = 'Manual'
   config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Development'
   config.build_settings['CODE_SIGN_IDENTITY[sdk=macosx*]'] = 'Apple Development'
@@ -40,7 +40,7 @@ ext_target.build_configurations.each do |config|
   config.build_settings['INFOPLIST_FILE'] = 'src/Config/MarkdownPreviewExtension-Info.plist'
   config.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'src/Config/MarkdownPreviewExtension.entitlements'
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.local.MarkdownPreviewApp.MarkdownPreviewExtension'
-  config.build_settings['DEVELOPMENT_TEAM'] = 'Q53266ZR2B'
+  config.build_settings['DEVELOPMENT_TEAM'] = 'ZVKZS6XN7Q'
   config.build_settings['CODE_SIGN_STYLE'] = 'Manual'
   config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Development'
   config.build_settings['CODE_SIGN_IDENTITY[sdk=macosx*]'] = 'Apple Development'
@@ -67,15 +67,25 @@ app_resources = [
 ext_sources = [
   'src/MarkdownPreviewExtension/PreviewViewController.swift'
 ]
+ext_resources = [
+  'src/MarkdownPreviewExtension/Resources/Prettier/standalone.js',
+  'src/MarkdownPreviewExtension/Resources/Prettier/parser-babel.js',
+  'src/MarkdownPreviewExtension/Resources/Prettier/parser-estree.js',
+  'src/MarkdownPreviewExtension/Resources/Prettier/parser-yaml.js'
+]
 
 app_refs = app_sources.map { |path| project.main_group.new_file(path) }
 app_resource_refs = app_resources.map { |path| project.main_group.new_file(path) }
 ext_refs = ext_sources.map { |path| project.main_group.new_file(path) }
+ext_resource_refs = ext_resources.map { |path| project.main_group.new_file(path) }
 
 app_target.add_file_references(app_refs)
 ext_target.add_file_references(ext_refs)
 app_resource_refs.each do |resource_ref|
   app_target.resources_build_phase.add_file_reference(resource_ref)
+end
+ext_resource_refs.each do |resource_ref|
+  ext_target.resources_build_phase.add_file_reference(resource_ref)
 end
 
 package_ref = project.new(Xcodeproj::Project::Object::XCLocalSwiftPackageReference)

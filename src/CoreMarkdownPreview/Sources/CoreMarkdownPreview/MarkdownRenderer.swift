@@ -89,6 +89,7 @@ public struct MarkdownRenderer {
     }
 
     private func renderCodeBlock(lines: [String], start: Int) -> (String, Int) {
+        let language = fenceLanguage(from: lines[start])
         var i = start + 1
         var codeLines: [String] = []
         while i < lines.count {
@@ -100,8 +101,32 @@ public struct MarkdownRenderer {
             i += 1
         }
 
-        let code = escapeHTML(codeLines.joined(separator: "\n"))
-        return ("<pre><code>\(code)</code></pre>", i)
+        let rawCode = codeLines.joined(separator: "\n")
+        let code = escapeHTML(rawCode)
+        let classAttribute: String
+        let dataAttribute: String
+        if let language {
+            classAttribute = " class=\"language-\(escapeHTML(language))\""
+            dataAttribute = " data-language=\"\(escapeHTML(language))\""
+        } else {
+            classAttribute = ""
+            dataAttribute = ""
+        }
+        return ("<pre><code\(classAttribute)\(dataAttribute)>\(code)</code></pre>", i)
+    }
+
+    private func fenceLanguage(from line: String) -> String? {
+        guard line.hasPrefix("```") else { return nil }
+        let remainder = line.dropFirst(3).trimmingCharacters(in: .whitespaces)
+        guard !remainder.isEmpty else { return nil }
+        let token = remainder.split(whereSeparator: \.isWhitespace).first.map(String.init) ?? ""
+        let normalized = token
+            .trimmingCharacters(in: CharacterSet(charactersIn: "{}."))
+            .lowercased()
+        if normalized == "yml" {
+            return "yaml"
+        }
+        return normalized.isEmpty ? nil : normalized
     }
 
     private func renderBlockquote(lines: [String], start: Int) -> (String, Int) {

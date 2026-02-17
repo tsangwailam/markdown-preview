@@ -28,4 +28,46 @@ final class MarkdownRendererTests: XCTestCase {
         XCTAssertTrue(html.contains("<th>Name</th>"))
         XCTAssertTrue(html.contains("<td>30</td>"))
     }
+
+    func testCodeFenceIncludesLanguageClassForJSON() {
+        let renderer = MarkdownRenderer()
+        let markdown = """
+        ```json
+        {"b":1,"a":{"d":4,"c":3}}
+        ```
+        """
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("<pre><code class=\"language-json\" data-language=\"json\">"))
+        XCTAssertTrue(html.contains("{\"b\":1,\"a\":{\"d\":4,\"c\":3}}"))
+    }
+
+    func testCodeFenceNormalizesYMLToYAMLClass() {
+        let renderer = MarkdownRenderer()
+        let markdown = """
+        ```yml
+        a: 1
+        ```
+        """
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("class=\"language-yaml\""))
+        XCTAssertTrue(html.contains("data-language=\"yaml\""))
+    }
+
+    func testSQLCodeFenceIncludesLanguageClass() {
+        let renderer = MarkdownRenderer()
+        let markdown = """
+        ```sql
+        select id,name from users where active = 1 order by name
+        ```
+        """
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("class=\"language-sql\""))
+        XCTAssertTrue(html.contains("select id,name from users where active = 1 order by name"))
+    }
 }
