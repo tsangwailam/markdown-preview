@@ -1,48 +1,50 @@
 import Cocoa
 import Quartz
+import WebKit
 import CoreMarkdownPreview
 
-final class PreviewViewController: NSViewController, QLPreviewingController {
+final class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
     private let cache = PreviewCache(capacity: 48)
     private let renderer = MarkdownRenderer()
-    private var textView: NSTextView!
+    private var webView: WKWebView!
+    private var fallbackScrollView: NSScrollView!
+    private var fallbackTextView: NSTextView!
+    private var pendingHandler: ((Error?) -> Void)?
+    private var pendingTimeoutWorkItem: DispatchWorkItem?
+    private var lastHTML: String?
+    private var attemptedSafeReload = false
 
     override func loadView() {
-        let scrollView = NSTextView.scrollableTextView()
+        let config = WKWebViewConfiguration()
+        config.defaultWebpagePreferences.allowsContentJavaScript = true
+
+        let container = NSView(frame: .zero)
+
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.frame = container.bounds
+        webView.autoresizingMask = [.width, .height]
+        webView.navigationDelegate = self
+        self.webView = webView
+
+        let textView = NSTextView(frame: container.bounds)
+        textView.isEditable = false
+        textView.isRichText = true
+        textView.drawsBackground = true
+        textView.backgroundColor = .textBackgroundColor
+        textView.autoresizingMask = [.width, .height]
+        self.fallbackTextView = textView
+
+        let scrollView = NSScrollView(frame: container.bounds)
+        scrollView.autoresizingMask = [.width, .height]
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
-        scrollView.autohidesScrollers = true
-        scrollView.drawsBackground = true
-        scrollView.backgroundColor = .textBackgroundColor
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.borderType = .noBorder
+        scrollView.documentView = textView
+        scrollView.isHidden = true
+        self.fallbackScrollView = scrollView
 
-        guard let textView = scrollView.documentView as? NSTextView else {
-            self.view = NSView()
-            return
-        }
-
-        self.textView = textView
-        self.textView.isEditable = false
-        self.textView.isSelectable = true
-        self.textView.drawsBackground = true
-        self.textView.backgroundColor = .textBackgroundColor
-        self.textView.textContainerInset = NSSize(width: 16, height: 16)
-        self.textView.minSize = NSSize(width: 0, height: 0)
-        self.textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        self.textView.isVerticallyResizable = true
-        self.textView.isHorizontallyResizable = false
-        self.textView.autoresizingMask = [.width]
-        self.textView.textContainer?.containerSize = NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
-        self.textView.textContainer?.widthTracksTextView = true
-
-        let container = NSView()
+        container.addSubview(webView)
         container.addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: container.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-        ])
         self.view = container
     }
 
@@ -51,8 +53,9 @@ final class PreviewViewController: NSViewController, QLPreviewingController {
             do {
                 let key = try Self.cacheKey(for: url)
                 if let cached = await cache.value(for: key) {
-                    try setHTML(cached)
-                    handler(nil)
+                    await MainActor.run {
+                        loadHTML(cached, completion: handler)
+                    }
                     return
                 }
 
@@ -74,8 +77,9 @@ final class PreviewViewController: NSViewController, QLPreviewingController {
                 }
 
                 await cache.store(html, for: key)
-                try setHTML(html)
-                handler(nil)
+                await MainActor.run {
+                    loadHTML(html, completion: handler)
+                }
             } catch {
                 Task { @MainActor in
                     let message = """
@@ -85,8 +89,8 @@ final class PreviewViewController: NSViewController, QLPreviewingController {
 
                     File: \(url.path)
                     """
-                    setPlainText(message)
-                    handler(nil)
+                    setErrorHTML(message)
+                    finishPending(nil)
                 }
             }
         }
@@ -143,26 +147,110 @@ final class PreviewViewController: NSViewController, QLPreviewingController {
     }
 
     @MainActor
-    private func setHTML(_ html: String) throws {
+    private func loadHTML(_ html: String, completion: @escaping (Error?) -> Void) {
+        finishPending(nil)
+        pendingHandler = completion
+        lastHTML = html
+        attemptedSafeReload = false
+        fallbackScrollView.isHidden = true
+        webView.isHidden = false
+        let timeout = DispatchWorkItem { [weak self] in
+            Task { @MainActor in
+                self?.finishPending(nil)
+            }
+        }
+        pendingTimeoutWorkItem = timeout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: timeout)
+        let resourceBundle = Bundle(for: PreviewViewController.self)
+        webView.loadHTMLString(html, baseURL: resourceBundle.resourceURL)
+    }
+
+    private func strippedFormatterScripts(from html: String) -> String {
+        var stripped = html
+        stripped = stripped.replacingOccurrences(of: "<script src=\"standalone.js\"></script>", with: "")
+        stripped = stripped.replacingOccurrences(of: "<script src=\"parser-babel.js\"></script>", with: "")
+        stripped = stripped.replacingOccurrences(of: "<script src=\"parser-estree.js\"></script>", with: "")
+        stripped = stripped.replacingOccurrences(of: "<script src=\"parser-yaml.js\"></script>", with: "")
+        stripped = stripped.replacingOccurrences(
+            of: #"<script>\s*\(function\s*\(\)\s*\{[\s\S]*?\}\)\(\);\s*</script>"#,
+            with: "",
+            options: .regularExpression
+        )
+        return stripped
+    }
+
+    @MainActor
+    private func showFallbackHTML(_ html: String) {
         let data = Data(html.utf8)
-        let attributed = try NSAttributedString(
+        if let attributed = try? NSAttributedString(
             data: data,
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
             ],
             documentAttributes: nil
-        )
-        let mutable = NSMutableAttributedString(attributedString: attributed)
-        let fullRange = NSRange(location: 0, length: mutable.length)
-        mutable.removeAttribute(.backgroundColor, range: fullRange)
-        mutable.addAttribute(.foregroundColor, value: NSColor.labelColor, range: fullRange)
-        textView.textStorage?.setAttributedString(mutable)
+        ) {
+            fallbackTextView.textStorage?.setAttributedString(attributed)
+        } else {
+            fallbackTextView.string = html
+        }
+        webView.isHidden = true
+        fallbackScrollView.isHidden = false
     }
 
     @MainActor
-    private func setPlainText(_ text: String) {
-        textView.string = text
-        textView.textColor = .labelColor
+    private func setErrorHTML(_ text: String) {
+        let escaped = text
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+        let html = HTMLTemplate.page(body: "<pre><code>\(escaped)</code></pre>", theme: .light)
+        let resourceBundle = Bundle(for: PreviewViewController.self)
+        webView.loadHTMLString(html, baseURL: resourceBundle.resourceURL)
+    }
+
+    @MainActor
+    private func finishPending(_ error: Error?) {
+        pendingTimeoutWorkItem?.cancel()
+        pendingTimeoutWorkItem = nil
+        guard let handler = pendingHandler else {
+            return
+        }
+        pendingHandler = nil
+        handler(error)
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        Task { @MainActor in
+            finishPending(nil)
+        }
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        Task { @MainActor in
+            finishPending(error)
+        }
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        Task { @MainActor in
+            finishPending(error)
+        }
+    }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        Task { @MainActor in
+            guard !attemptedSafeReload, let html = lastHTML else {
+                if let html = lastHTML {
+                    showFallbackHTML(strippedFormatterScripts(from: html))
+                }
+                finishPending(nil)
+                return
+            }
+            attemptedSafeReload = true
+            let safeHTML = strippedFormatterScripts(from: html)
+            let resourceBundle = Bundle(for: PreviewViewController.self)
+            webView.loadHTMLString(safeHTML, baseURL: resourceBundle.resourceURL)
+        }
     }
 }

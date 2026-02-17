@@ -7,7 +7,9 @@
 Package.resolved
 
 # Xcode user/local state
+DerivedData
 DerivedData/
+DerivedDataSigned/
 build/
 *.xcuserstate
 *.xcscmblueprint
