@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_NAME="MarkdownPreviewApp.app"
 VOL_NAME="Markdown Preview Installer"
-ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DEFAULT_DERIVED_DATA_PATH="${HOME}/Library/Developer/Xcode/DerivedData/MarkdownPreview-agtqxaknownxrrgcucdepbqvkthl"
 DERIVED_DATA_PATH="${DERIVED_DATA_PATH:-$DEFAULT_DERIVED_DATA_PATH}"
 BUILD_APP="${BUILD_APP:-${DERIVED_DATA_PATH}/Build/Products/Release/${APP_NAME}}"
