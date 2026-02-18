@@ -68,9 +68,11 @@ ext_sources = [
   'src/MarkdownPreviewExtension/PreviewViewController.swift'
 ]
 ext_resources = [
+  'src/MarkdownPreviewExtension/Resources/HighlightJS/highlight.min.js',
   'src/MarkdownPreviewExtension/Resources/Prettier/standalone.js',
   'src/MarkdownPreviewExtension/Resources/Prettier/parser-babel.js',
   'src/MarkdownPreviewExtension/Resources/Prettier/parser-estree.js',
+  'src/MarkdownPreviewExtension/Resources/Prettier/parser-html.js',
   'src/MarkdownPreviewExtension/Resources/Prettier/parser-yaml.js'
 ]
 

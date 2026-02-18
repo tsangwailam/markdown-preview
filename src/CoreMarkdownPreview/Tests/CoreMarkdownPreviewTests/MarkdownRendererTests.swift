@@ -70,4 +70,32 @@ final class MarkdownRendererTests: XCTestCase {
         XCTAssertTrue(html.contains("class=\"language-sql\""))
         XCTAssertTrue(html.contains("select id,name from users where active = 1 order by name"))
     }
+
+    func testPYCodeFenceNormalizesToPythonClass() {
+        let renderer = MarkdownRenderer()
+        let markdown = """
+        ```py
+        print("hello")
+        ```
+        """
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("class=\"language-python\""))
+        XCTAssertTrue(html.contains("data-language=\"python\""))
+    }
+
+    func testJSCodeFenceNormalizesToJavaScriptClass() {
+        let renderer = MarkdownRenderer()
+        let markdown = """
+        ```js
+        const value = 1
+        ```
+        """
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("class=\"language-javascript\""))
+        XCTAssertTrue(html.contains("data-language=\"javascript\""))
+    }
 }

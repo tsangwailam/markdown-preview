@@ -167,9 +167,11 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
 
     private func strippedFormatterScripts(from html: String) -> String {
         var stripped = html
+        stripped = stripped.replacingOccurrences(of: "<script src=\"highlight.min.js\"></script>", with: "")
         stripped = stripped.replacingOccurrences(of: "<script src=\"standalone.js\"></script>", with: "")
         stripped = stripped.replacingOccurrences(of: "<script src=\"parser-babel.js\"></script>", with: "")
         stripped = stripped.replacingOccurrences(of: "<script src=\"parser-estree.js\"></script>", with: "")
+        stripped = stripped.replacingOccurrences(of: "<script src=\"parser-html.js\"></script>", with: "")
         stripped = stripped.replacingOccurrences(of: "<script src=\"parser-yaml.js\"></script>", with: "")
         stripped = stripped.replacingOccurrences(
             of: #"<script>\s*\(function\s*\(\)\s*\{[\s\S]*?\}\)\(\);\s*</script>"#,

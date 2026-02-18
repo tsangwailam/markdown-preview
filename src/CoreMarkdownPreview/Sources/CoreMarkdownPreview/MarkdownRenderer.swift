@@ -123,8 +123,17 @@ public struct MarkdownRenderer {
         let normalized = token
             .trimmingCharacters(in: CharacterSet(charactersIn: "{}."))
             .lowercased()
-        if normalized == "yml" {
+        switch normalized {
+        case "yml":
             return "yaml"
+        case "py":
+            return "python"
+        case "js":
+            return "javascript"
+        case "ts":
+            return "typescript"
+        default:
+            break
         }
         return normalized.isEmpty ? nil : normalized
     }

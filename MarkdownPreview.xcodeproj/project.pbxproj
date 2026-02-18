@@ -7,38 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		17F1458AAE0CE1A11A7A41BF /* parser-yaml.js in Resources */ = {isa = PBXBuildFile; fileRef = 73F878A8DD4850CE9FCEC8CF /* parser-yaml.js */; };
-		196CEBEBBB4FB7FB4B823A91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EE9374F06CAB6167D594C1F /* Assets.xcassets */; };
-		1A2A79C69B4C7637C4C1957A /* parser-estree.js in Resources */ = {isa = PBXBuildFile; fileRef = F866BE6488017AAD326E3A28 /* parser-estree.js */; };
-		1C29EB4C0B20F882BCA56155 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360365959E326158EEE2CA2D /* Cocoa.framework */; };
-		3DCEF96044162F7F57747BB6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2B89CD1F6F7AD5957ACC8 /* ContentView.swift */; };
-		4C80846144DF4D218A4C6B44 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBE87520885C4F065C248B3 /* PreviewViewController.swift */; };
-		4D679B3E072D186012F5F2CD /* CoreMarkdownPreview in Frameworks */ = {isa = PBXBuildFile; productRef = FFD35AA89F5F1FC00C33D803 /* CoreMarkdownPreview */; };
-		5078C2DAC93C904890381449 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360365959E326158EEE2CA2D /* Cocoa.framework */; };
-		6552AB453F5FA046D210F8E7 /* MarkdownPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BABE6C7954223ED0D0136A0 /* MarkdownPreviewApp.swift */; };
-		75E9E433734124856495C46A /* parser-babel.js in Resources */ = {isa = PBXBuildFile; fileRef = CEB8438446B5D1F6DD81CE27 /* parser-babel.js */; };
-		BEE88528A99B8ECE7CDF460E /* MarkdownPreviewExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 253192FF37DA2D81B936FB61 /* MarkdownPreviewExtension.appex */; };
-		DB357854F32D4A4C079B5F5A /* standalone.js in Resources */ = {isa = PBXBuildFile; fileRef = 96077FB3AAF9EEEDC56D8395 /* standalone.js */; };
+		261030873AC57F9032CBE1AE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573CD8E3ECC6F343841CB7BB /* ContentView.swift */; };
+		35750E8387B89A38F32073BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAE9AD42878E114EE2A68F4C /* Cocoa.framework */; };
+		36BA82F82E0B259003ECD993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A30A8BF4279F8CD364E6E10 /* Assets.xcassets */; };
+		4E85210CD088EFEE420AB9DE /* parser-estree.js in Resources */ = {isa = PBXBuildFile; fileRef = 144819D86C39C3B67F6B4A21 /* parser-estree.js */; };
+		644E1B44F6ED771D5592C935 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36AC6EB7B1882C64A2DE876 /* PreviewViewController.swift */; };
+		646A4363E990BF198398CA29 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAE9AD42878E114EE2A68F4C /* Cocoa.framework */; };
+		7A03BCC97E9BCC9876E36D3A /* MarkdownPreviewExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2EA4345895DE5E462C6C6A4 /* MarkdownPreviewExtension.appex */; };
+		89E500052707AEB7BA65BB22 /* parser-yaml.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FA7865379FE4ECEA88C0EB5 /* parser-yaml.js */; };
+		C89B520E8A4EC3B47B6F7A17 /* MarkdownPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FB48F99462A735A0A0D238 /* MarkdownPreviewApp.swift */; };
+		D2C81C7DE7BBBD8623B011F8 /* CoreMarkdownPreview in Frameworks */ = {isa = PBXBuildFile; productRef = B4639CA4D54F2C7895CF1B66 /* CoreMarkdownPreview */; };
+		D700BCFC9C31BC76C975079B /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 69933CDE65CEAD5408F0C92F /* highlight.min.js */; };
+		E6A555912AB23EAD78964E92 /* parser-html.js in Resources */ = {isa = PBXBuildFile; fileRef = 88D1061D11B79EB7017BFC85 /* parser-html.js */; };
+		ECFE41672A2A7A51014D688E /* standalone.js in Resources */ = {isa = PBXBuildFile; fileRef = 112C480A2BECBD10145CB768 /* standalone.js */; };
+		FCF11DF8892651F48199A12A /* parser-babel.js in Resources */ = {isa = PBXBuildFile; fileRef = D0AD2A7245D7B11289B7CB27 /* parser-babel.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4C8B24CE2483894FAED28437 /* PBXContainerItemProxy */ = {
+		341EECF6D1F099793A70BB34 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 881D470607B40E254C511B8B /* Project object */;
+			containerPortal = 6C50B20F11FB99D6E50D1D0E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = EBD1DFFFE4844E89F7372EE6;
+			remoteGlobalIDString = 541B56C7FE4DA528EF572819;
 			remoteInfo = MarkdownPreviewExtension;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B456BD1BB9B53D6D3CA217CD /* Embed App Extensions */ = {
+		9519A91C76672B0554A725D3 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				BEE88528A99B8ECE7CDF460E /* MarkdownPreviewExtension.appex in Embed App Extensions */,
+				7A03BCC97E9BCC9876E36D3A /* MarkdownPreviewExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,134 +48,138 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1BBE87520885C4F065C248B3 /* PreviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PreviewViewController.swift; path = src/MarkdownPreviewExtension/PreviewViewController.swift; sourceTree = "<group>"; };
-		253192FF37DA2D81B936FB61 /* MarkdownPreviewExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MarkdownPreviewExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		360365959E326158EEE2CA2D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		3EE9374F06CAB6167D594C1F /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = src/MarkdownPreviewApp/Assets.xcassets; sourceTree = "<group>"; };
-		5CABEACD4A26BB232E718964 /* MarkdownPreviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarkdownPreviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		73F878A8DD4850CE9FCEC8CF /* parser-yaml.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-yaml.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-yaml.js"; sourceTree = "<group>"; };
-		7BABE6C7954223ED0D0136A0 /* MarkdownPreviewApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownPreviewApp.swift; path = src/MarkdownPreviewApp/MarkdownPreviewApp.swift; sourceTree = "<group>"; };
-		96077FB3AAF9EEEDC56D8395 /* standalone.js */ = {isa = PBXFileReference; includeInIndex = 1; name = standalone.js; path = src/MarkdownPreviewExtension/Resources/Prettier/standalone.js; sourceTree = "<group>"; };
-		C1B2B89CD1F6F7AD5957ACC8 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = src/MarkdownPreviewApp/ContentView.swift; sourceTree = "<group>"; };
-		CEB8438446B5D1F6DD81CE27 /* parser-babel.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-babel.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-babel.js"; sourceTree = "<group>"; };
-		F866BE6488017AAD326E3A28 /* parser-estree.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-estree.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-estree.js"; sourceTree = "<group>"; };
+		112C480A2BECBD10145CB768 /* standalone.js */ = {isa = PBXFileReference; includeInIndex = 1; name = standalone.js; path = src/MarkdownPreviewExtension/Resources/Prettier/standalone.js; sourceTree = "<group>"; };
+		144819D86C39C3B67F6B4A21 /* parser-estree.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-estree.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-estree.js"; sourceTree = "<group>"; };
+		4FA7865379FE4ECEA88C0EB5 /* parser-yaml.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-yaml.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-yaml.js"; sourceTree = "<group>"; };
+		573CD8E3ECC6F343841CB7BB /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = src/MarkdownPreviewApp/ContentView.swift; sourceTree = "<group>"; };
+		69933CDE65CEAD5408F0C92F /* highlight.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.min.js; path = src/MarkdownPreviewExtension/Resources/HighlightJS/highlight.min.js; sourceTree = "<group>"; };
+		88D1061D11B79EB7017BFC85 /* parser-html.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-html.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-html.js"; sourceTree = "<group>"; };
+		8A30A8BF4279F8CD364E6E10 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = src/MarkdownPreviewApp/Assets.xcassets; sourceTree = "<group>"; };
+		B2FB48F99462A735A0A0D238 /* MarkdownPreviewApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownPreviewApp.swift; path = src/MarkdownPreviewApp/MarkdownPreviewApp.swift; sourceTree = "<group>"; };
+		B36AC6EB7B1882C64A2DE876 /* PreviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PreviewViewController.swift; path = src/MarkdownPreviewExtension/PreviewViewController.swift; sourceTree = "<group>"; };
+		BAE9AD42878E114EE2A68F4C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		C2D83C66EF417FF245BD52BA /* MarkdownPreviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarkdownPreviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2EA4345895DE5E462C6C6A4 /* MarkdownPreviewExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MarkdownPreviewExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0AD2A7245D7B11289B7CB27 /* parser-babel.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "parser-babel.js"; path = "src/MarkdownPreviewExtension/Resources/Prettier/parser-babel.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		89730DE54F8DCA86D45F701F /* Frameworks */ = {
+		52BEB42ABD8E2C928624113A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5078C2DAC93C904890381449 /* Cocoa.framework in Frameworks */,
-				4D679B3E072D186012F5F2CD /* CoreMarkdownPreview in Frameworks */,
+				35750E8387B89A38F32073BF /* Cocoa.framework in Frameworks */,
+				D2C81C7DE7BBBD8623B011F8 /* CoreMarkdownPreview in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ADA1B5ED35639931D6D1EF2F /* Frameworks */ = {
+		BBB39AF9614D54F01B3C6D9D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C29EB4C0B20F882BCA56155 /* Cocoa.framework in Frameworks */,
+				646A4363E990BF198398CA29 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3619F604FFA39EA1E1FEEF51 /* Frameworks */ = {
+		21AC54B6EB7EC212F60D4B6F /* src */ = {
 			isa = PBXGroup;
 			children = (
-				CD9A9133AF791E0592A0C986 /* OS X */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7EF16C5ED84D92930570F5D0 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				CBB1FF45F9B1290B217E2856 /* MarkdownPreviewApp */,
-				F1CB2BCC03FDAD852CB598A3 /* MarkdownPreviewExtension */,
+				DBDAB2964125BE5EBBE2B78F /* MarkdownPreviewApp */,
+				5674AA052651CC1389F6EEEB /* MarkdownPreviewExtension */,
 			);
 			name = src;
 			sourceTree = "<group>";
 		};
-		9D45CE9BBDC40D596E6D0F9A = {
+		2BEBD7B068E7E783D8B0A2AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CCCDF3C376136334E346878B /* Products */,
-				3619F604FFA39EA1E1FEEF51 /* Frameworks */,
-				7EF16C5ED84D92930570F5D0 /* src */,
-				7BABE6C7954223ED0D0136A0 /* MarkdownPreviewApp.swift */,
-				C1B2B89CD1F6F7AD5957ACC8 /* ContentView.swift */,
-				3EE9374F06CAB6167D594C1F /* Assets.xcassets */,
-				1BBE87520885C4F065C248B3 /* PreviewViewController.swift */,
-				96077FB3AAF9EEEDC56D8395 /* standalone.js */,
-				CEB8438446B5D1F6DD81CE27 /* parser-babel.js */,
-				F866BE6488017AAD326E3A28 /* parser-estree.js */,
-				73F878A8DD4850CE9FCEC8CF /* parser-yaml.js */,
+				5090C3D338FB31CBFA3AF5C3 /* OS X */,
 			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CBB1FF45F9B1290B217E2856 /* MarkdownPreviewApp */ = {
+		5090C3D338FB31CBFA3AF5C3 /* OS X */ = {
 			isa = PBXGroup;
 			children = (
-			);
-			name = MarkdownPreviewApp;
-			sourceTree = "<group>";
-		};
-		CCCDF3C376136334E346878B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5CABEACD4A26BB232E718964 /* MarkdownPreviewApp.app */,
-				253192FF37DA2D81B936FB61 /* MarkdownPreviewExtension.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		CD9A9133AF791E0592A0C986 /* OS X */ = {
-			isa = PBXGroup;
-			children = (
-				360365959E326158EEE2CA2D /* Cocoa.framework */,
+				BAE9AD42878E114EE2A68F4C /* Cocoa.framework */,
 			);
 			name = "OS X";
 			sourceTree = "<group>";
 		};
-		F1CB2BCC03FDAD852CB598A3 /* MarkdownPreviewExtension */ = {
+		5674AA052651CC1389F6EEEB /* MarkdownPreviewExtension */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = MarkdownPreviewExtension;
 			sourceTree = "<group>";
 		};
+		66F740AD0F315766F75B5EDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C2D83C66EF417FF245BD52BA /* MarkdownPreviewApp.app */,
+				C2EA4345895DE5E462C6C6A4 /* MarkdownPreviewExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		72FBADCD27C2CDB4D9CE95DE = {
+			isa = PBXGroup;
+			children = (
+				66F740AD0F315766F75B5EDA /* Products */,
+				2BEBD7B068E7E783D8B0A2AA /* Frameworks */,
+				21AC54B6EB7EC212F60D4B6F /* src */,
+				B2FB48F99462A735A0A0D238 /* MarkdownPreviewApp.swift */,
+				573CD8E3ECC6F343841CB7BB /* ContentView.swift */,
+				8A30A8BF4279F8CD364E6E10 /* Assets.xcassets */,
+				B36AC6EB7B1882C64A2DE876 /* PreviewViewController.swift */,
+				69933CDE65CEAD5408F0C92F /* highlight.min.js */,
+				112C480A2BECBD10145CB768 /* standalone.js */,
+				D0AD2A7245D7B11289B7CB27 /* parser-babel.js */,
+				144819D86C39C3B67F6B4A21 /* parser-estree.js */,
+				88D1061D11B79EB7017BFC85 /* parser-html.js */,
+				4FA7865379FE4ECEA88C0EB5 /* parser-yaml.js */,
+			);
+			sourceTree = "<group>";
+		};
+		DBDAB2964125BE5EBBE2B78F /* MarkdownPreviewApp */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = MarkdownPreviewApp;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A0D5074554CF832D646808EA /* MarkdownPreviewApp */ = {
+		5330B2759C88E10675B54C7C /* MarkdownPreviewApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EFDEFAA38ECB027BB18818A8 /* Build configuration list for PBXNativeTarget "MarkdownPreviewApp" */;
+			buildConfigurationList = 663CDA928C51144F15F5A3CA /* Build configuration list for PBXNativeTarget "MarkdownPreviewApp" */;
 			buildPhases = (
-				7535FC1326C2C53039AFBD76 /* Sources */,
-				ADA1B5ED35639931D6D1EF2F /* Frameworks */,
-				E5287913C7074DAF48B786F5 /* Resources */,
-				B456BD1BB9B53D6D3CA217CD /* Embed App Extensions */,
+				8B1CB23549ABF937C68E8FC8 /* Sources */,
+				BBB39AF9614D54F01B3C6D9D /* Frameworks */,
+				5F522C8CD63C3D9F8A440D4D /* Resources */,
+				9519A91C76672B0554A725D3 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E2637395C50933029F607D05 /* PBXTargetDependency */,
+				FBD20E2E87F09B457F174190 /* PBXTargetDependency */,
 			);
 			name = MarkdownPreviewApp;
 			productName = MarkdownPreviewApp;
-			productReference = 5CABEACD4A26BB232E718964 /* MarkdownPreviewApp.app */;
+			productReference = C2D83C66EF417FF245BD52BA /* MarkdownPreviewApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EBD1DFFFE4844E89F7372EE6 /* MarkdownPreviewExtension */ = {
+		541B56C7FE4DA528EF572819 /* MarkdownPreviewExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7329E8329A54C1E081DDE38B /* Build configuration list for PBXNativeTarget "MarkdownPreviewExtension" */;
+			buildConfigurationList = A104A9CDDA67C19AD1CB4B0A /* Build configuration list for PBXNativeTarget "MarkdownPreviewExtension" */;
 			buildPhases = (
-				FD2A887D7555F66FE40E145A /* Sources */,
-				89730DE54F8DCA86D45F701F /* Frameworks */,
-				7B267C393F599E15DF709E6F /* Resources */,
+				05CB5070A64235D5227A4726 /* Sources */,
+				52BEB42ABD8E2C928624113A /* Frameworks */,
+				CB9589EFA1AC94E43D0F017C /* Resources */,
 			);
 			buildRules = (
 			);
@@ -181,22 +187,22 @@
 			);
 			name = MarkdownPreviewExtension;
 			packageProductDependencies = (
-				FFD35AA89F5F1FC00C33D803 /* CoreMarkdownPreview */,
+				B4639CA4D54F2C7895CF1B66 /* CoreMarkdownPreview */,
 			);
 			productName = MarkdownPreviewExtension;
-			productReference = 253192FF37DA2D81B936FB61 /* MarkdownPreviewExtension.appex */;
+			productReference = C2EA4345895DE5E462C6C6A4 /* MarkdownPreviewExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		881D470607B40E254C511B8B /* Project object */ = {
+		6C50B20F11FB99D6E50D1D0E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 2620;
 			};
-			buildConfigurationList = A2D82526515C7B4E4220D490 /* Build configuration list for PBXProject "MarkdownPreview" */;
+			buildConfigurationList = 4BB71ED463B14CD5BE2C04B4 /* Build configuration list for PBXProject "MarkdownPreview" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -204,75 +210,77 @@
 				en,
 				Base,
 			);
-			mainGroup = 9D45CE9BBDC40D596E6D0F9A;
+			mainGroup = 72FBADCD27C2CDB4D9CE95DE;
 			minimizedProjectReferenceProxies = 0;
 			packageReferences = (
-				965E1146E4646FA8F0B6B226 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */,
+				6A6BE39132522EC5D21303F2 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = CCCDF3C376136334E346878B /* Products */;
+			productRefGroup = 66F740AD0F315766F75B5EDA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A0D5074554CF832D646808EA /* MarkdownPreviewApp */,
-				EBD1DFFFE4844E89F7372EE6 /* MarkdownPreviewExtension */,
+				5330B2759C88E10675B54C7C /* MarkdownPreviewApp */,
+				541B56C7FE4DA528EF572819 /* MarkdownPreviewExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		7B267C393F599E15DF709E6F /* Resources */ = {
+		5F522C8CD63C3D9F8A440D4D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB357854F32D4A4C079B5F5A /* standalone.js in Resources */,
-				75E9E433734124856495C46A /* parser-babel.js in Resources */,
-				1A2A79C69B4C7637C4C1957A /* parser-estree.js in Resources */,
-				17F1458AAE0CE1A11A7A41BF /* parser-yaml.js in Resources */,
+				36BA82F82E0B259003ECD993 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E5287913C7074DAF48B786F5 /* Resources */ = {
+		CB9589EFA1AC94E43D0F017C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				196CEBEBBB4FB7FB4B823A91 /* Assets.xcassets in Resources */,
+				D700BCFC9C31BC76C975079B /* highlight.min.js in Resources */,
+				ECFE41672A2A7A51014D688E /* standalone.js in Resources */,
+				FCF11DF8892651F48199A12A /* parser-babel.js in Resources */,
+				4E85210CD088EFEE420AB9DE /* parser-estree.js in Resources */,
+				E6A555912AB23EAD78964E92 /* parser-html.js in Resources */,
+				89E500052707AEB7BA65BB22 /* parser-yaml.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		7535FC1326C2C53039AFBD76 /* Sources */ = {
+		05CB5070A64235D5227A4726 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6552AB453F5FA046D210F8E7 /* MarkdownPreviewApp.swift in Sources */,
-				3DCEF96044162F7F57747BB6 /* ContentView.swift in Sources */,
+				644E1B44F6ED771D5592C935 /* PreviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FD2A887D7555F66FE40E145A /* Sources */ = {
+		8B1CB23549ABF937C68E8FC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C80846144DF4D218A4C6B44 /* PreviewViewController.swift in Sources */,
+				C89B520E8A4EC3B47B6F7A17 /* MarkdownPreviewApp.swift in Sources */,
+				261030873AC57F9032CBE1AE /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E2637395C50933029F607D05 /* PBXTargetDependency */ = {
+		FBD20E2E87F09B457F174190 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = MarkdownPreviewExtension;
-			target = EBD1DFFFE4844E89F7372EE6 /* MarkdownPreviewExtension */;
-			targetProxy = 4C8B24CE2483894FAED28437 /* PBXContainerItemProxy */;
+			target = 541B56C7FE4DA528EF572819 /* MarkdownPreviewExtension */;
+			targetProxy = 341EECF6D1F099793A70BB34 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1C355CB1564BEFA651C1590B /* Release */ = {
+		4EC74C381E288FEE0A0B8B30 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -330,29 +338,7 @@
 			};
 			name = Release;
 		};
-		21CE57D4C4FE5EBE6A372A74 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewApp.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
-				INFOPLIST_FILE = "src/Config/MarkdownPreviewApp-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp;
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-			};
-			name = Release;
-		};
-		2411D9F55E3F4D04AC6F64D0 /* Debug */ = {
+		7222DF4108FCED062B49F1C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -374,7 +360,69 @@
 			};
 			name = Debug;
 		};
-		27940953A7658A9A83CC73EF /* Debug */ = {
+		84CF73FBB59FE84444003D98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
+				INFOPLIST_FILE = "src/Config/MarkdownPreviewApp-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		917D1BE48A23117F8A6BAB4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
+				INFOPLIST_FILE = "src/Config/MarkdownPreviewExtension-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp.MarkdownPreviewExtension;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9B520CE007AB1DDE9513617D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
+				INFOPLIST_FILE = "src/Config/MarkdownPreviewExtension-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp.MarkdownPreviewExtension;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		B1093887D5AD86187850E408 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -439,72 +487,32 @@
 			};
 			name = Debug;
 		};
-		5DAF715B1062A57B1A176D9D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
-				INFOPLIST_FILE = "src/Config/MarkdownPreviewExtension-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp.MarkdownPreviewExtension;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		7B4BEA4514C3BC8BBD5DE3F5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = src/Config/MarkdownPreviewExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZVKZS6XN7Q;
-				INFOPLIST_FILE = "src/Config/MarkdownPreviewExtension-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.local.MarkdownPreviewApp.MarkdownPreviewExtension;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7329E8329A54C1E081DDE38B /* Build configuration list for PBXNativeTarget "MarkdownPreviewExtension" */ = {
+		4BB71ED463B14CD5BE2C04B4 /* Build configuration list for PBXProject "MarkdownPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5DAF715B1062A57B1A176D9D /* Release */,
-				7B4BEA4514C3BC8BBD5DE3F5 /* Debug */,
+				B1093887D5AD86187850E408 /* Debug */,
+				4EC74C381E288FEE0A0B8B30 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A2D82526515C7B4E4220D490 /* Build configuration list for PBXProject "MarkdownPreview" */ = {
+		663CDA928C51144F15F5A3CA /* Build configuration list for PBXNativeTarget "MarkdownPreviewApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27940953A7658A9A83CC73EF /* Debug */,
-				1C355CB1564BEFA651C1590B /* Release */,
+				84CF73FBB59FE84444003D98 /* Release */,
+				7222DF4108FCED062B49F1C8 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EFDEFAA38ECB027BB18818A8 /* Build configuration list for PBXNativeTarget "MarkdownPreviewApp" */ = {
+		A104A9CDDA67C19AD1CB4B0A /* Build configuration list for PBXNativeTarget "MarkdownPreviewExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				21CE57D4C4FE5EBE6A372A74 /* Release */,
-				2411D9F55E3F4D04AC6F64D0 /* Debug */,
+				9B520CE007AB1DDE9513617D /* Release */,
+				917D1BE48A23117F8A6BAB4C /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -512,19 +520,19 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		965E1146E4646FA8F0B6B226 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */ = {
+		6A6BE39132522EC5D21303F2 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = src/CoreMarkdownPreview;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FFD35AA89F5F1FC00C33D803 /* CoreMarkdownPreview */ = {
+		B4639CA4D54F2C7895CF1B66 /* CoreMarkdownPreview */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 965E1146E4646FA8F0B6B226 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */;
+			package = 6A6BE39132522EC5D21303F2 /* XCLocalSwiftPackageReference "CoreMarkdownPreview" */;
 			productName = CoreMarkdownPreview;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 881D470607B40E254C511B8B /* Project object */;
+	rootObject = 6C50B20F11FB99D6E50D1D0E /* Project object */;
 }
