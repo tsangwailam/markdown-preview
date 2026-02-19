@@ -1,5 +1,7 @@
 # Markdown Preview (macOS Quick Look)
 
+<img width="824" height="642" alt="image" src="https://github.com/user-attachments/assets/57f134ab-1ceb-4df8-8675-434d652d7b1c" />
+
 Quick Look extension for Markdown files.
 
 ## Prerequisites
@@ -36,8 +38,8 @@ Set your signing identity string and run:
 IDENTITY='Apple Development: YOUR_NAME (TEAMID)'
 SRC_APP='/tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app'
 DST_APP='/Applications/MarkdownPreviewApp.app'
-EXT_ENT='/Volumes/sambashare/poc/mdp/code/src/Config/MarkdownPreviewExtension.entitlements'
-APP_ENT='/Volumes/sambashare/poc/mdp/code/src/Config/MarkdownPreviewApp.entitlements'
+EXT_ENT='ROOT/src/Config/MarkdownPreviewExtension.entitlements'
+APP_ENT='ROOT/src/Config/MarkdownPreviewApp.entitlements'
 
 rm -rf "$DST_APP"
 cp -R "$SRC_APP" "$DST_APP"
