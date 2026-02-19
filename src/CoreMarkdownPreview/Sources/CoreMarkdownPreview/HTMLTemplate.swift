@@ -87,14 +87,29 @@ public struct HTMLTemplate {
             return button;
           }
 
+          function ensureCodeState(code) {
+            if (!code.__mdpState) {
+              code.__mdpState = { source: "", sourceHTML: "", formatted: "" };
+            }
+            return code.__mdpState;
+          }
+
           function setCodeView(code, button, view) {
-            const source = code.getAttribute("data-source") || "";
-            const formatted = code.getAttribute("data-formatted") || source;
+            const state = ensureCodeState(code);
+            const source = state.source || "";
+            const sourceHTML = state.sourceHTML || "";
+            const formatted = state.formatted || source;
             const hasFormatted = formatted !== source;
             const nextView = hasFormatted ? view : "source";
-            const text = nextView === "source" ? source : formatted;
-
-            code.textContent = text;
+            if (nextView === "source") {
+              if (sourceHTML) {
+                code.innerHTML = sourceHTML;
+              } else {
+                code.textContent = source;
+              }
+            } else {
+              code.textContent = formatted;
+            }
             code.setAttribute("data-view", nextView);
 
             if (button) {
@@ -140,6 +155,7 @@ public struct HTMLTemplate {
             for (const code of codeBlocks) {
               const language = languageFromCodeElement(code);
               const config = configForLanguage(language);
+              const sourceHTML = code.innerHTML || "";
               const source = code.textContent || "";
               let formatted = source;
 
@@ -167,20 +183,26 @@ public struct HTMLTemplate {
                 }
               }
 
-              code.setAttribute("data-source", source);
-              code.setAttribute("data-formatted", formatted);
+              const state = ensureCodeState(code);
+              state.source = source;
+              state.sourceHTML = sourceHTML;
+              state.formatted = formatted;
 
               const button = ensureCodeToolbar(code);
               const initialView = formatted === source ? "source" : "formatted";
               setCodeView(code, button, initialView);
-              highlightCode(code, language);
+              if (language) {
+                highlightCode(code, language);
+              }
 
               if (button) {
                 button.addEventListener("click", function () {
                   const current = code.getAttribute("data-view") || "source";
                   const next = current === "source" ? "formatted" : "source";
                   setCodeView(code, button, next);
-                  highlightCode(code, language);
+                  if (next === "formatted") {
+                    highlightCode(code, language);
+                  }
                 });
               }
             }

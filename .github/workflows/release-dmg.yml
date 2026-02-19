@@ -12,6 +12,13 @@ permissions:
 jobs:
   build-and-release:
     runs-on: macos-14
+    env:
+      DERIVED_DATA_PATH: ${{ runner.temp }}/mdp-dd
+      KEYCHAIN_PATH: ${{ runner.temp }}/build.keychain-db
+      APP_PATH: ${{ runner.temp }}/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app
+      EXT_PATH: ${{ runner.temp }}/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app/Contents/PlugIns/MarkdownPreviewExtension.appex
+      APP_ENTITLEMENTS: src/Config/MarkdownPreviewApp.entitlements
+      EXT_ENTITLEMENTS: src/Config/MarkdownPreviewExtension.entitlements
 
     steps:
       - name: Checkout
@@ -22,8 +29,6 @@ jobs:
         run: swift test
 
       - name: Build release app (unsigned)
-        env:
-          DERIVED_DATA_PATH: ${{ runner.temp }}/mdp-dd
         run: |
           xcodebuild \
             -project MarkdownPreview.xcodeproj \
@@ -33,15 +38,99 @@ jobs:
             clean build \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Create DMG
+      - name: Validate release secrets
         env:
-          DERIVED_DATA_PATH: ${{ runner.temp }}/mdp-dd
+          CERT_B64: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT_P12_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for var in CERT_B64 CERT_PASSWORD KEYCHAIN_PASSWORD APPLE_ID APPLE_TEAM_ID APPLE_APP_SPECIFIC_PASSWORD; do
+            if [ -z "${!var:-}" ]; then
+              echo "Missing required secret: $var" >&2
+              exit 1
+            fi
+          done
+
+      - name: Import Developer ID certificate
+        env:
+          CERT_B64: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT_P12_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          CERT_PATH="${RUNNER_TEMP}/developer_id.p12"
+          echo "$CERT_B64" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
+          security default-keychain -d user -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+      - name: Sign app and extension
+        run: |
+          set -euo pipefail
+
+          # Sign nested libraries in extension bundle first.
+          find "$EXT_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
+            codesign --force --options runtime --timestamp --sign "Developer ID Application" "$f"
+          done
+          find "$EXT_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
+            codesign --force --options runtime --timestamp --sign "Developer ID Application" "$f"
+          done
+
+          # Extension first to preserve extension entitlements.
+          codesign --force --options runtime --timestamp \
+            --entitlements "$EXT_ENTITLEMENTS" \
+            --sign "Developer ID Application" \
+            "$EXT_PATH"
+
+          # Sign nested binaries in app bundle.
+          find "$APP_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
+            codesign --force --options runtime --timestamp --sign "Developer ID Application" "$f"
+          done
+          find "$APP_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
+            codesign --force --options runtime --timestamp --sign "Developer ID Application" "$f"
+          done
+
+          # App last.
+          codesign --force --options runtime --timestamp \
+            --entitlements "$APP_ENTITLEMENTS" \
+            --sign "Developer ID Application" \
+            "$APP_PATH"
+
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+          spctl -a -vvv --type exec "$APP_PATH"
+
+      - name: Create DMG
         run: bash scripts/create_dmg.sh
 
       - name: Verify DMG output
         run: |
           ls -la dist
           test -n "$(ls -1 dist/*.dmg 2>/dev/null)"
+
+      - name: Notarize and staple DMG
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          set -euo pipefail
+          DMG_PATH="$(ls -1 dist/*.dmg | head -n 1)"
+          xcrun notarytool submit "$DMG_PATH" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --wait
+          xcrun stapler staple "$DMG_PATH"
+          spctl -a -vvv --type open "$DMG_PATH"
 
       - name: Upload DMG to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')

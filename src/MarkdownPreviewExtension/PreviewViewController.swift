@@ -4,15 +4,23 @@ import WebKit
 import CoreMarkdownPreview
 
 final class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
+    private enum PreviewMode {
+        case rendered
+        case raw
+    }
+
     private let cache = PreviewCache(capacity: 48)
     private let renderer = MarkdownRenderer()
     private var webView: WKWebView!
+    private var toggleButton: NSButton!
     private var fallbackScrollView: NSScrollView!
     private var fallbackTextView: NSTextView!
     private var pendingHandler: ((Error?) -> Void)?
     private var pendingTimeoutWorkItem: DispatchWorkItem?
+    private var lastMarkdown: String = ""
     private var lastHTML: String?
     private var attemptedSafeReload = false
+    private var currentMode: PreviewMode = .rendered
 
     override func loadView() {
         let config = WKWebViewConfiguration()
@@ -21,45 +29,73 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         let container = NSView(frame: .zero)
 
         let webView = WKWebView(frame: .zero, configuration: config)
-        webView.frame = container.bounds
-        webView.autoresizingMask = [.width, .height]
         webView.navigationDelegate = self
+        webView.translatesAutoresizingMaskIntoConstraints = false
         self.webView = webView
 
-        let textView = NSTextView(frame: container.bounds)
+        let textView = NSTextView(frame: .zero)
         textView.isEditable = false
-        textView.isRichText = true
+        textView.isRichText = false
         textView.drawsBackground = true
         textView.backgroundColor = .textBackgroundColor
-        textView.autoresizingMask = [.width, .height]
+        textView.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        textView.isVerticallyResizable = true
+        textView.isHorizontallyResizable = false
+        textView.autoresizingMask = [.width]
+        textView.textContainer?.widthTracksTextView = true
+        textView.textContainer?.containerSize = NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
         self.fallbackTextView = textView
 
-        let scrollView = NSScrollView(frame: container.bounds)
-        scrollView.autoresizingMask = [.width, .height]
+        let scrollView = NSScrollView(frame: .zero)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
         scrollView.borderType = .noBorder
         scrollView.documentView = textView
+        textView.frame = scrollView.contentView.bounds
         scrollView.isHidden = true
         self.fallbackScrollView = scrollView
 
+        let button = NSButton(title: "Raw", target: self, action: #selector(togglePreviewMode))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.bezelStyle = .rounded
+        self.toggleButton = button
+
         container.addSubview(webView)
         container.addSubview(scrollView)
+        container.addSubview(button)
+
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: container.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+
+            scrollView.topAnchor.constraint(equalTo: container.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+
+            button.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
+            button.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10)
+        ])
+
         self.view = container
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         Task {
             do {
+                let markdown = try Self.readMarkdown(at: url)
                 let key = try Self.cacheKey(for: url)
                 if let cached = await cache.value(for: key) {
                     await MainActor.run {
+                        lastMarkdown = markdown
                         loadHTML(cached, completion: handler)
                     }
                     return
                 }
 
-                let markdown = try Self.readMarkdown(at: url)
                 let isDarkMode = await MainActor.run {
                     view.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
                 }
@@ -78,6 +114,7 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
 
                 await cache.store(html, for: key)
                 await MainActor.run {
+                    lastMarkdown = markdown
                     loadHTML(html, completion: handler)
                 }
             } catch {
@@ -152,8 +189,7 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         pendingHandler = completion
         lastHTML = html
         attemptedSafeReload = false
-        fallbackScrollView.isHidden = true
-        webView.isHidden = false
+        applyCurrentMode()
         let timeout = DispatchWorkItem { [weak self] in
             Task { @MainActor in
                 self?.finishPending(nil)
@@ -163,6 +199,22 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: timeout)
         let resourceBundle = Bundle(for: PreviewViewController.self)
         webView.loadHTMLString(html, baseURL: resourceBundle.resourceURL)
+    }
+
+    @MainActor
+    @objc
+    private func togglePreviewMode() {
+        currentMode = currentMode == .rendered ? .raw : .rendered
+        applyCurrentMode()
+    }
+
+    @MainActor
+    private func applyCurrentMode() {
+        fallbackTextView.string = lastMarkdown
+        let showRaw = currentMode == .raw
+        webView.isHidden = showRaw
+        fallbackScrollView.isHidden = !showRaw
+        toggleButton.title = showRaw ? "Render" : "Raw"
     }
 
     private func strippedFormatterScripts(from html: String) -> String {
@@ -179,25 +231,6 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
             options: .regularExpression
         )
         return stripped
-    }
-
-    @MainActor
-    private func showFallbackHTML(_ html: String) {
-        let data = Data(html.utf8)
-        if let attributed = try? NSAttributedString(
-            data: data,
-            options: [
-                .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: String.Encoding.utf8.rawValue
-            ],
-            documentAttributes: nil
-        ) {
-            fallbackTextView.textStorage?.setAttributedString(attributed)
-        } else {
-            fallbackTextView.string = html
-        }
-        webView.isHidden = true
-        fallbackScrollView.isHidden = false
     }
 
     @MainActor
@@ -243,9 +276,8 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         Task { @MainActor in
             guard !attemptedSafeReload, let html = lastHTML else {
-                if let html = lastHTML {
-                    showFallbackHTML(strippedFormatterScripts(from: html))
-                }
+                currentMode = .raw
+                applyCurrentMode()
                 finishPending(nil)
                 return
             }
