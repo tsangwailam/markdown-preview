@@ -13,10 +13,10 @@ jobs:
   build-and-release:
     runs-on: macos-14
     env:
-      DERIVED_DATA_PATH: ${{ runner.temp }}/mdp-dd
-      KEYCHAIN_PATH: ${{ runner.temp }}/build.keychain-db
-      APP_PATH: ${{ runner.temp }}/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app
-      EXT_PATH: ${{ runner.temp }}/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app/Contents/PlugIns/MarkdownPreviewExtension.appex
+      DERIVED_DATA_PATH: /tmp/mdp-dd
+      KEYCHAIN_PATH: /tmp/build.keychain-db
+      APP_PATH: /tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app
+      EXT_PATH: /tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app/Contents/PlugIns/MarkdownPreviewExtension.appex
       APP_ENTITLEMENTS: src/Config/MarkdownPreviewApp.entitlements
       EXT_ENTITLEMENTS: src/Config/MarkdownPreviewExtension.entitlements
 
