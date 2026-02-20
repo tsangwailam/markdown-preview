@@ -259,7 +259,8 @@ public struct MarkdownRenderer {
     }
 
     private func inlineMarkup(_ text: String) -> String {
-        var out = escapeHTML(text)
+        let (prepared, rawImagePlaceholders) = extractSafeRawImages(from: text)
+        var out = escapeHTML(prepared)
 
         out = out.replacingOccurrences(
             of: #"`([^`]+)`"#,
@@ -280,6 +281,16 @@ public struct MarkdownRenderer {
         )
 
         out = regexReplace(
+            pattern: #"!\[([^\]]*)\]\(([^)]+)\)"#,
+            in: out
+        ) { groups in
+            guard groups.count == 2 else { return groups.first ?? "" }
+            let altText = escapeAttribute(groups[0])
+            let url = sanitizeURL(groups[1])
+            return #"<img src="\#(url)" alt="\#(altText)" />"#
+        }
+
+        out = regexReplace(
             pattern: #"\[([^\]]+)\]\(([^)]+)\)"#,
             in: out
         ) { groups in
@@ -289,7 +300,102 @@ public struct MarkdownRenderer {
             return #"<a href="\#(url)">\#(linkText)</a>"#
         }
 
+        out = restorePlaceholders(in: out, placeholders: rawImagePlaceholders)
         return out
+    }
+
+    private func extractSafeRawImages(from input: String) -> (String, [String: String]) {
+        guard let regex = try? NSRegularExpression(
+            pattern: #"(?i)<img\b[^>]*>(?:\s*</img\s*>)?"#
+        ) else {
+            return (input, [:])
+        }
+
+        let nsRange = NSRange(input.startIndex..<input.endIndex, in: input)
+        let matches = regex.matches(in: input, range: nsRange)
+        if matches.isEmpty {
+            return (input, [:])
+        }
+
+        var result = input
+        var placeholders: [String: String] = [:]
+
+        for (index, match) in matches.reversed().enumerated() {
+            guard let range = Range(match.range, in: result) else { continue }
+            let rawMatch = String(result[range])
+            guard let safeTag = sanitizeRawImageTag(rawMatch) else { continue }
+            let token = "__MDP_RAW_IMG_\(matches.count - 1 - index)__"
+            placeholders[token] = safeTag
+            result.replaceSubrange(range, with: token)
+        }
+
+        return (result, placeholders)
+    }
+
+    private func restorePlaceholders(in input: String, placeholders: [String: String]) -> String {
+        guard !placeholders.isEmpty else { return input }
+        var output = input
+        for (token, value) in placeholders {
+            output = output.replacingOccurrences(of: token, with: value)
+        }
+        return output
+    }
+
+    private func sanitizeRawImageTag(_ raw: String) -> String? {
+        guard let openTagRegex = try? NSRegularExpression(pattern: #"(?i)<img\b[^>]*>"#),
+              let attrRegex = try? NSRegularExpression(
+                pattern: #"([A-Za-z_:][A-Za-z0-9_:\.-]*)\s*=\s*("([^"]*)"|'([^']*)')"#
+              )
+        else {
+            return nil
+        }
+
+        let rawRange = NSRange(raw.startIndex..<raw.endIndex, in: raw)
+        guard let openMatch = openTagRegex.firstMatch(in: raw, range: rawRange),
+              let openRange = Range(openMatch.range, in: raw)
+        else {
+            return nil
+        }
+
+        let openTag = String(raw[openRange])
+        let openRangeNS = NSRange(openTag.startIndex..<openTag.endIndex, in: openTag)
+        let attrMatches = attrRegex.matches(in: openTag, range: openRangeNS)
+
+        var attributes: [String: String] = [:]
+        for match in attrMatches {
+            guard let nameRange = Range(match.range(at: 1), in: openTag) else { continue }
+            let name = openTag[nameRange].lowercased()
+            let valueRange: Range<String.Index>?
+            if let quoted = Range(match.range(at: 3), in: openTag) {
+                valueRange = quoted
+            } else if let singleQuoted = Range(match.range(at: 4), in: openTag) {
+                valueRange = singleQuoted
+            } else {
+                valueRange = nil
+            }
+            guard let valueRange else { continue }
+            attributes[name] = String(openTag[valueRange])
+        }
+
+        guard let srcRaw = attributes["src"] else { return nil }
+        let src = sanitizeURL(srcRaw)
+        var img = #"<img src="\#(src)""#
+
+        if let alt = attributes["alt"] {
+            img += #" alt="\#(escapeAttribute(alt))""#
+        }
+        if let title = attributes["title"] {
+            img += #" title="\#(escapeAttribute(title))""#
+        }
+        if let width = attributes["width"], width.range(of: #"^\d{1,4}$"#, options: .regularExpression) != nil {
+            img += #" width="\#(width)""#
+        }
+        if let height = attributes["height"], height.range(of: #"^\d{1,4}$"#, options: .regularExpression) != nil {
+            img += #" height="\#(height)""#
+        }
+
+        img += " />"
+        return img
     }
 
     private func regexReplace(

@@ -98,4 +98,23 @@ final class MarkdownRendererTests: XCTestCase {
         XCTAssertTrue(html.contains("class=\"language-javascript\""))
         XCTAssertTrue(html.contains("data-language=\"javascript\""))
     }
+
+    func testImageSyntaxRendersImgTag() {
+        let renderer = MarkdownRenderer()
+        let markdown = "![Kitten](https://example.com/cat.png)"
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("<img src=\"https://example.com/cat.png\" alt=\"Kitten\" />"))
+    }
+
+    func testRawHTMLImageTagRendersAsImage() {
+        let renderer = MarkdownRenderer()
+        let markdown = #"<img width="824" height="642" alt="image" src="https://example.com/a.png"></img>"#
+
+        let html = renderer.render(markdown: markdown, theme: .light)
+
+        XCTAssertTrue(html.contains("<img src=\"https://example.com/a.png\" alt=\"image\" width=\"824\" height=\"642\" />"))
+        XCTAssertFalse(html.contains("&lt;img"))
+    }
 }
