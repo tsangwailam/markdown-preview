@@ -189,6 +189,7 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         pendingHandler = completion
         lastHTML = html
         attemptedSafeReload = false
+        currentMode = .rendered
         applyCurrentMode()
         let timeout = DispatchWorkItem { [weak self] in
             Task { @MainActor in
