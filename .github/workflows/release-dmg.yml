@@ -53,31 +53,8 @@ jobs:
           set -euo pipefail
           SIGNING_IDENTITY="-"
           echo "Using ad-hoc identity: $SIGNING_IDENTITY"
-
-          find "$EXT_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
-            codesign --force --sign "$SIGNING_IDENTITY" "$f"
-          done
-          find "$EXT_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
-            codesign --force --sign "$SIGNING_IDENTITY" "$f"
-          done
-
-          codesign --force \
-            --entitlements "$EXT_ENTITLEMENTS" \
-            --sign "$SIGNING_IDENTITY" \
-            "$EXT_PATH"
-
-          find "$APP_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
-            codesign --force --sign "$SIGNING_IDENTITY" "$f"
-          done
-          find "$APP_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
-            codesign --force --sign "$SIGNING_IDENTITY" "$f"
-          done
-
-          codesign --force \
-            --entitlements "$APP_ENTITLEMENTS" \
-            --sign "$SIGNING_IDENTITY" \
-            "$APP_PATH"
-
+          codesign --force --sign - --entitlements "$EXT_ENTITLEMENTS" "$EXT_PATH"
+          codesign --force --sign - --entitlements "$APP_ENTITLEMENTS" "$APP_PATH"
           codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 
       - name: Create DMG
