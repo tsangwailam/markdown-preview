@@ -5,12 +5,101 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      release_mode:
+        description: "Release mode"
+        required: true
+        default: "adhoc"
+        type: choice
+        options:
+          - adhoc
+          - notarized
+          - both
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  build-and-release-adhoc:
+    if: github.event_name == 'workflow_dispatch' && (inputs.release_mode == 'adhoc' || inputs.release_mode == 'both')
+    runs-on: macos-14
+    env:
+      DERIVED_DATA_PATH: /tmp/mdp-dd
+      APP_PATH: /tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app
+      EXT_PATH: /tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app/Contents/PlugIns/MarkdownPreviewExtension.appex
+      APP_ENTITLEMENTS: src/Config/MarkdownPreviewApp.entitlements
+      EXT_ENTITLEMENTS: src/Config/MarkdownPreviewExtension.entitlements
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Core package tests
+        working-directory: src/CoreMarkdownPreview
+        run: swift test
+
+      - name: Build release app (unsigned)
+        run: |
+          xcodebuild \
+            -project MarkdownPreview.xcodeproj \
+            -scheme MarkdownPreviewApp \
+            -configuration Release \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            clean build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Sign app and extension (ad-hoc)
+        run: |
+          set -euo pipefail
+          SIGNING_IDENTITY="-"
+          echo "Using ad-hoc identity: $SIGNING_IDENTITY"
+
+          find "$EXT_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
+            codesign --force --sign "$SIGNING_IDENTITY" "$f"
+          done
+          find "$EXT_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
+            codesign --force --sign "$SIGNING_IDENTITY" "$f"
+          done
+
+          codesign --force \
+            --entitlements "$EXT_ENTITLEMENTS" \
+            --sign "$SIGNING_IDENTITY" \
+            "$EXT_PATH"
+
+          find "$APP_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
+            codesign --force --sign "$SIGNING_IDENTITY" "$f"
+          done
+          find "$APP_PATH/Contents/Frameworks" -maxdepth 1 -type d -name "*.framework" -print0 2>/dev/null | while IFS= read -r -d '' f; do
+            codesign --force --sign "$SIGNING_IDENTITY" "$f"
+          done
+
+          codesign --force \
+            --entitlements "$APP_ENTITLEMENTS" \
+            --sign "$SIGNING_IDENTITY" \
+            "$APP_PATH"
+
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+
+      - name: Create DMG
+        run: bash scripts/create_dmg.sh
+
+      - name: Rename DMG artifact
+        run: mv dist/MarkdownPreviewApp-Installer.dmg dist/MarkdownPreviewApp-Installer-adhoc.dmg
+
+      - name: Verify DMG output
+        run: |
+          ls -la dist
+          test -f dist/MarkdownPreviewApp-Installer-adhoc.dmg
+
+      - name: Upload DMG to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/MarkdownPreviewApp-Installer-adhoc.dmg
+          generate_release_notes: true
+
+  build-and-release-notarized:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.release_mode == 'notarized' || inputs.release_mode == 'both'))
     runs-on: macos-14
     env:
       DERIVED_DATA_PATH: /tmp/mdp-dd
@@ -80,12 +169,11 @@ jobs:
           fi
           echo "SIGNING_IDENTITY=$SIGNING_IDENTITY" >> "$GITHUB_ENV"
 
-      - name: Sign app and extension
+      - name: Sign app and extension (Developer ID)
         run: |
           set -euo pipefail
           echo "Using identity: $SIGNING_IDENTITY"
 
-          # Sign nested libraries in extension bundle first.
           find "$EXT_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
             codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$f"
           done
@@ -93,13 +181,11 @@ jobs:
             codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$f"
           done
 
-          # Extension first to preserve extension entitlements.
           codesign --force --options runtime --timestamp \
             --entitlements "$EXT_ENTITLEMENTS" \
             --sign "$SIGNING_IDENTITY" \
             "$EXT_PATH"
 
-          # Sign nested binaries in app bundle.
           find "$APP_PATH/Contents" -type f \( -name "*.dylib" -o -name "*.so" \) -print0 | while IFS= read -r -d '' f; do
             codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$f"
           done
@@ -107,7 +193,6 @@ jobs:
             codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$f"
           done
 
-          # App last.
           codesign --force --options runtime --timestamp \
             --entitlements "$APP_ENTITLEMENTS" \
             --sign "$SIGNING_IDENTITY" \
@@ -122,7 +207,7 @@ jobs:
       - name: Verify DMG output
         run: |
           ls -la dist
-          test -n "$(ls -1 dist/*.dmg 2>/dev/null)"
+          test -f dist/MarkdownPreviewApp-Installer.dmg
 
       - name: Notarize and staple DMG
         env:
@@ -131,7 +216,7 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
         run: |
           set -euo pipefail
-          DMG_PATH="$(ls -1 dist/*.dmg | head -n 1)"
+          DMG_PATH="dist/MarkdownPreviewApp-Installer.dmg"
           xcrun notarytool submit "$DMG_PATH" \
             --apple-id "$APPLE_ID" \
             --team-id "$APPLE_TEAM_ID" \
@@ -140,9 +225,12 @@ jobs:
           xcrun stapler staple "$DMG_PATH"
           spctl -a -vvv --type open "$DMG_PATH"
 
+      - name: Rename DMG artifact
+        run: mv dist/MarkdownPreviewApp-Installer.dmg dist/MarkdownPreviewApp-Installer-notarized.dmg
+
       - name: Upload DMG to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.dmg
+          files: dist/MarkdownPreviewApp-Installer-notarized.dmg
           generate_release_notes: true

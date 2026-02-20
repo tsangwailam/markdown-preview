@@ -56,7 +56,7 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         scrollView.isHidden = true
         self.fallbackScrollView = scrollView
 
-        let button = NSButton(title: "Raw", target: self, action: #selector(togglePreviewMode))
+        let button = NSButton(title: "Markdown", target: self, action: #selector(togglePreviewMode))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.bezelStyle = .rounded
         self.toggleButton = button
@@ -215,7 +215,7 @@ final class PreviewViewController: NSViewController, QLPreviewingController, WKN
         let showRaw = currentMode == .raw
         webView.isHidden = showRaw
         fallbackScrollView.isHidden = !showRaw
-        toggleButton.title = showRaw ? "Render" : "Raw"
+        toggleButton.title = showRaw ? "Preview" : "Markdown"
     }
 
     private func strippedFormatterScripts(from html: String) -> String {
