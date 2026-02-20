@@ -2,6 +2,8 @@
 
 # Markdown Preview - Mac OS Quicklook plugin
 
+Quick Look extension for Markdown files on macOS.
+
 [![Downloads](https://img.shields.io/github/downloads/tsangwailam/markdown-preview/total)](https://github.com/tsangwailam/markdown-preview/releases)
 [![Release](https://img.shields.io/github/v/release/tsangwailam/markdown-preview)](https://github.com/tsangwailam/markdown-preview/releases)
 [![Stars](https://img.shields.io/github/stars/tsangwailam/markdown-preview?style=social)](https://github.com/tsangwailam/markdown-preview/stargazers)
@@ -9,8 +11,10 @@
 
 <img width="1908" height="1332" alt="image" src="https://github.com/user-attachments/assets/3b5d78bc-658b-4024-8a23-a2daeadbfc56" />
 
+## Download latest version
 
-Quick Look extension for Markdown files on macOS.
+Download latest version here:
+https://github.com/tsangwailam/markdown-preview/releases
 
 ## What is Markdown Preview?
 
