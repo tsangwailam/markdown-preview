@@ -14,7 +14,11 @@ Quick Look extension for Markdown files on macOS.
 ## Download latest version
 
 Download latest version here:
-https://github.com/tsangwailam/markdown-preview/releases
+
+> https://github.com/tsangwailam/markdown-preview/releases
+
+
+‼️Since the app is signed with Adhoc. In order to run, ignore Mac OS security warning.
 
 ## What is Markdown Preview?
 
