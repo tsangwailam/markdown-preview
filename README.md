@@ -1,33 +1,51 @@
-# Markdown Preview (macOS Quick Look)
+# Markdown Preview
+
+[![Downloads](https://img.shields.io/github/downloads/tsangwailam/markdown-preview/total)](https://github.com/tsangwailam/markdown-preview/releases)
+[![Release](https://img.shields.io/github/v/release/tsangwailam/markdown-preview)](https://github.com/tsangwailam/markdown-preview/releases)
+[![Stars](https://img.shields.io/github/stars/tsangwailam/markdown-preview?style=social)](https://github.com/tsangwailam/markdown-preview/stargazers)
+[![License](https://img.shields.io/github/license/tsangwailam/markdown-preview)](LICENSE)
 
 <img width="824" height="642" alt="image" src="https://github.com/user-attachments/assets/57f134ab-1ceb-4df8-8675-434d652d7b1c" />
 
-Quick Look extension for Markdown files.
+Quick Look extension for Markdown files on macOS.
+
+## What is Markdown Preview?
+
+Markdown Preview is a macOS Finder Quick Look plugin that renders Markdown documents as styled HTML previews. Instead of plain text in Quick Look, you get readable formatting for headings, lists, blockquotes, code fences, tables, links, and inline emphasis. The project includes:
+
+- `MarkdownPreviewExtension`: the Quick Look extension.
+- `MarkdownPreviewApp`: host app used for extension registration.
+- `CoreMarkdownPreview`: shared Swift package for rendering, theming, and cache.
 
 ## Prerequisites
 
 - macOS with Xcode installed
 - Valid Apple Development code-signing identity (`security find-identity -v -p codesigning`)
 
-## Build
+## Quick Start
 
-Build Release output without Xcode signing:
+From the repository root, use the local release script:
 
 ```bash
-cd /Volumes/sambashare/poc/mdp/code
-xcodebuild \
-  -project MarkdownPreview.xcodeproj \
-  -scheme MarkdownPreviewApp \
-  -configuration Release \
-  -derivedDataPath /tmp/mdp-dd \
-  clean build \
-  CODE_SIGNING_ALLOWED=NO
+bash scripts/build_local_release.sh
 ```
 
-App output:
+To build and install to `/Applications` (and refresh Quick Look registration/cache):
+
+```bash
+bash scripts/build_local_release.sh --install
+```
+
+Default output app path:
 
 ```text
 /tmp/mdp-dd/Build/Products/Release/MarkdownPreviewApp.app
+```
+
+Optional: customize DerivedData path for build output:
+
+```bash
+DERIVED_DATA_PATH=/tmp/custom-mdp-dd bash scripts/build_local_release.sh --install
 ```
 
 ## Sign + Install
@@ -78,3 +96,7 @@ qlmanage -r
 ```bash
 pluginkit -m -A -D -v -p com.apple.quicklook.preview | rg 'com.local.MarkdownPreviewApp.MarkdownPreviewExtension|/Applications/MarkdownPreviewApp.app'
 ```
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.
