@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   build-and-release-adhoc:
-    if: github.event_name == 'push' && (inputs.release_mode == 'adhoc' || inputs.release_mode == 'both')
+    if: github.event_name == 'push'
     runs-on: macos-14
     env:
       DERIVED_DATA_PATH: /tmp/mdp-dd
